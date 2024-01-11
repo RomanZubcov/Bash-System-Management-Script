@@ -1,73 +1,71 @@
 #!/bin/bash
 
-#tema 1 Zubcov Roman 
-
-
+#Topic 1: Zubcov Roman
 
 function menu {
-  echo "1. Ieșire"
-  echo "2. Afișare informații despre sistemul de operare"
-  echo "3. Afișarea primelor 3 shell-uri instalate în sistem"
-  echo "4. Afișare informații despre rețea"
-  echo "5. Creare director"
-  echo "6. Copiere fișier"
-  echo "7. Ștergere director"
-  echo "8. Căutare comandă"
-  echo "9. Afișează toate fișierele de log"
+  echo "1. Exit"
+  echo "2. Display information about the operating system"
+  echo "3. Display the first 3 installed shells on the system"
+  echo "4. Display information about the network"
+  echo "5. Create directory"
+  echo "6. Copy file"
+  echo "7. Delete directory"
+  echo "8. Search command"
+  echo "9. Display all log files"
 }
 
 function option {
   local options=("1" "2" "3" "4" "5" "6" "7" "8" "9")
-  local option=""
+  local opt=""
   while ! [[ " ${options[@]} " =~ " ${opt} " ]]; do
-    read -p "Introduceți opțiunea: " opt
+    read -p "Enter your choice: " opt
   done
   echo "$opt"
 }
 
 function show_info {
-  echo "Numele serverului: $HOSTNAME"
-  echo "Tipul sistemului de operare: $OSTYPE"
-  echo "Versiunea bash-ului: $BASH_VERSION"
-  echo "Calea curentă: $PWD"
+  echo "Server name: $HOSTNAME"
+  echo "Operating system type: $OSTYPE"
+  echo "Bash version: $BASH_VERSION"
+  echo "Current path: $PWD"
 }
 
 function installed_shells {
-  echo "Primele 3 shell-uri instalate în sistem:"
+  echo "First 3 shells installed on the system:"
   head -n 3 /etc/shells
 }
 
 function network_info {
   local ip_addr=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1)
   local gateway=$(route -n | grep '^0.0.0.0' | awk '{print $2}')
-  echo "Adresa IP a interfeței de rețea: $ip_addr"
+  echo "IP address of the network interface: $ip_addr"
   echo "Gateway: $gateway"
 }
 
-function creare_folder {
-  read -p "Introduceți numele directorului: " nume_folder
-  mkdir "$nume_folder"
-  echo "Directorul $nume_folder a fost creat."
+function create_folder {
+  read -p "Enter the directory name: " folder_name
+  mkdir "$folder_name"
+  echo "Directory $folder_name has been created."
 }
 
-function copiere_fisier {
-  read -p "Introduceți numele fișierului: " nume_fisier
-  local nume_folder=""
-  while [ -z "$nume_folder" ]; do
-    read -p "Introduceți numele directorului creat la punctul 5: " nume_folder
+function copy_file {
+  read -p "Enter the file name: " file_name
+  local folder_name=""
+  while [ -z "$folder_name" ]; do
+    read -p "Enter the name of the directory created in step 5: " folder_name
   done
-  cp "$nume_fisier" "$nume_folder"
-  echo "Fișierul $nume_fisier a fost copiat în directorul $nume_folder."
+  cp "$file_name" "$folder_name"
+  echo "File $file_name has been copied to the directory $folder_name."
 }
 
 function delete_directory {
-  read -p "Introduceți numele directorului creat la punctul 5: " nume_folder
-  rm -r "$nume_folder"
-  echo "Directorul $nume_folder și toate fișierele din interiorul lui au fost șterse."
+  read -p "Enter the name of the directory created in step 5: " folder_name
+  rm -r "$folder_name"
+  echo "Directory $folder_name and all files inside it have been deleted."
 }
 
 function search_command {
-  read -p "Introduceți cuvântul cheie: " keyword
+  read -p "Enter the keyword: " keyword
   history | grep "$keyword"
 }
 
@@ -76,81 +74,82 @@ function display_all_logs {
 }
 
 function search_log_file {
-  read -p "Introduceți numele fișierului de log: " log_file
-  read -p "Introduceți textul de căutat: " search
+  read -p "Enter the log file name: " log_file
+  read -p "Enter the text to search: " search
 }
+
 while true
 do
-    echo "Meniu:"
-    echo "1. Iesire"
-    echo "2. Afisare informatii despre sistemul de operare"
-    echo "3. Afisare primele 3 shell-uri instalate in sistem"
-    echo "4. Afisare informatii despre retea"
-    echo "5. Creare director"
-    echo "6. Copiere fisier"
-    echo "7. Stergere director"
-    echo "8. Cautare comanda"
-    echo "9. Afisare toate fisierele de log"
+    echo "Menu:"
+    echo "1. Exit"
+    echo "2. Display information about the operating system"
+    echo "3. Display the first 3 installed shells on the system"
+    echo "4. Display information about the network"
+    echo "5. Create directory"
+    echo "6. Copy file"
+    echo "7. Delete directory"
+    echo "8. Search command"
+    echo "9. Display all log files"
 
-    read -p "Introduceti o optiune: " option
+    read -p "Enter your choice: " option
     echo ""
 
     case $option in
         1)
-            echo "Ati ales sa iesiti din program."
+            echo "You chose to exit the program."
             exit 0
             ;;
         2)
-            echo "Nume server: $(hostname)"
-            echo "Tip sistem de operare: $(uname)"
-            echo "Versiune bash: $BASH_VERSION"
-            echo "Calea curenta: $PWD"
+            echo "Server name: $(hostname)"
+            echo "Operating system type: $(uname)"
+            echo "Bash version: $BASH_VERSION"
+            echo "Current path: $PWD"
             ;;
         3)
-            echo "Primele 3 shell-uri instalate in sistem:"
+            echo "First 3 shells installed on the system:"
             head -n 3 /etc/shells
             ;;
         4)
-            echo "Informatii despre retea:"
-            ip addr show | awk '/inet /{print "Adresa IP: "$2;exit}'
+            echo "Network information:"
+            ip addr show | awk '/inet /{print "IP Address: "$2;exit}'
             echo "Gateway: $(ip route | awk '/default/ {print $3}')"
             ;;
         5)
-            read -p "Introduceti numele directorului: " nume_folder
-            mkdir $nume_folder
+            read -p "Enter the directory name: " folder_name
+            mkdir $folder_name
             if [ $? -eq 0 ]; then
-                echo "Directorul $nume_folder a fost creat cu succes."
+                echo "Directory $folder_name created successfully."
             else
-                echo "Eroare la crearea directorului $nume_folder."
+                echo "Error creating directory $folder_name."
             fi
             ;;
         6)
-            read -p "Introduceti numele fisierului: " nume_fisier
-            if [ -f "$nume_fisier" ]; then
-                cp $nume_fisier $nume_folder
-                echo "Fisierul $nume_fisier a fost copiat cu succes in directorul $nume_folder."
+            read -p "Enter the file name: " file_name
+            if [ -f "$file_name" ]; then
+                cp $file_name $folder_name
+                echo "File $file_name copied successfully to the directory $folder_name."
             else
-                echo "Fisierul $nume_fisier nu exista."
+                echo "File $file_name does not exist."
             fi
             ;;
         7)
-            read -p "Introduceti numele directorului: " nume_folder
-            rm -rf $nume_folder
+            read -p "Enter the directory name: " folder_name
+            rm -rf $folder_name
             if [ $? -eq 0 ]; then
-                echo "Directorul $nume_folder a fost sters cu succes."
+                echo "Directory $folder_name deleted successfully."
             else
-                echo "Eroare la stergerea directorului $nume_folder."
+                echo "Error deleting directory $folder_name."
             fi
             ;;
         8)
-            read -p "Introduceti un cuvant cheie: " keyword
+            read -p "Enter a keyword: " keyword
             history | grep $keyword
             ;;
         9)
-            echo "Toate fisierele de log:"
+            echo "All log files:"
             ls /var/log/*.log
-            read -p "Introduceti numele fisierului de log: " log_file
-            read -p "Introduceti textul de cautat: " search_text
+            read -p "Enter the log file name: " log_file
+            read -p "Enter the search text: " search_text
             if [[ $log_file == *".gz" ]]; then
                 gunzip -c $log_file | grep $search_text
             else
@@ -158,10 +157,9 @@ do
             fi
             ;;
         *)
-            echo "Optiune invalida."
+            echo "Invalid option."
             ;;
     esac
 
     echo ""
 done
-
